@@ -1,0 +1,86 @@
+{
+  "root": {
+    "width": "1440",
+    "height": "2452",
+    "viewBox": "0 0 1440 2452"
+  },
+  "images": [
+    {
+      "file": "img-00.png",
+      "mime": "image/png",
+      "bytes": 2379032,
+      "width": "1024",
+      "height": "1536"
+    },
+    {
+      "file": "img-01.png",
+      "mime": "image/png",
+      "bytes": 1698881,
+      "width": "1024",
+      "height": "1024"
+    },
+    {
+      "file": "img-02.png",
+      "mime": "image/png",
+      "bytes": 2084355,
+      "width": "1535",
+      "height": "1024"
+    },
+    {
+      "file": "img-03.png",
+      "mime": "image/png",
+      "bytes": 217304,
+      "width": "581",
+      "height": "1145"
+    },
+    {
+      "file": "img-04.png",
+      "mime": "image/png",
+      "bytes": 2577075,
+      "width": "1738",
+      "height": "905"
+    },
+    {
+      "file": "img-05.png",
+      "mime": "image/png",
+      "bytes": 2928018,
+      "width": "2048",
+      "height": "2048"
+    },
+    {
+      "file": "img-06.png",
+      "mime": "image/png",
+      "bytes": 15878,
+      "width": "512",
+      "height": "512"
+    },
+    {
+      "file": "img-07.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 17768,
+      "width": "678",
+      "height": "452"
+    },
+    {
+      "file": "img-08.png",
+      "mime": "image/png",
+      "bytes": 42490,
+      "width": "512",
+      "height": "512"
+    },
+    {
+      "file": "img-09.png",
+      "mime": "image/png",
+      "bytes": 23177,
+      "width": "512",
+      "height": "512"
+    },
+    {
+      "file": "img-10.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 15720,
+      "width": "447",
+      "height": "447"
+    }
+  ]
+}

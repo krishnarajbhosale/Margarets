@@ -1,0 +1,37 @@
+{
+  "root": {
+    "width": "1440",
+    "height": "2269",
+    "viewBox": "0 0 1440 2269"
+  },
+  "images": [
+    {
+      "file": "img-00.png",
+      "mime": "image/png",
+      "bytes": 1698881,
+      "width": "1024",
+      "height": "1024"
+    },
+    {
+      "file": "img-01.png",
+      "mime": "image/png",
+      "bytes": 649023,
+      "width": "1024",
+      "height": "1536"
+    },
+    {
+      "file": "img-02.png",
+      "mime": "image/png",
+      "bytes": 2602087,
+      "width": "1024",
+      "height": "1536"
+    },
+    {
+      "file": "img-03.png",
+      "mime": "image/png",
+      "bytes": 2265527,
+      "width": "1024",
+      "height": "1536"
+    }
+  ]
+}

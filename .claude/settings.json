@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -f _tmp_shot.mjs _contact.png _footer.png)",
+      "Bash(pkill -f \"vite\")",
+      "Bash(rm -f _tmp_shot.mjs _book_top.png _book_selected.png _contact_prefilled.png _footer2.png)",
+      "Bash(node -e ' *)",
+      "Bash(rm -f _tmp_shot.mjs _contact_hero.png _footer4.png)",
+      "Bash(rm -f _tmp_shot.mjs _hero_daisy.png)",
+      "Bash(grep -n \"id={\\\\`cat-\\\\|<FlourishDivider\\\\|className=\\\\\"group flex items-center justify-between\\\\|CONTINUE TO BOOKING\\\\|category quick-nav\\\\|sticky top-\\\\|fixed inset-x-0 bottom-0\" src/pages/Book.jsx)",
+      "Bash(node scripts/_recolor.mjs)",
+      "Bash(node scripts/_shot.mjs)",
+      "Bash(xargs -n1 basename)",
+      "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/shot_usa_services.mjs\")",
+      "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/shot_mx_services.mjs\")",
+      "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/audit_mobile.mjs\")"
+    ]
+  }
+}

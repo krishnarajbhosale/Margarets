@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+/* ===== Margaret's Beauty Bar — Tailwind theme tokens ===== */
+@theme {
+  --color-green-darkest: #041208;
+  --color-green-dark: #041208;
+  --color-green: #0d2419;
+  --color-green-panel: #0f2a1d;
+  --color-gold: #c7a253;
+  --color-gold-bright: #d8b95f;
+  --color-gold-soft: #e6cf94;
+  --color-gold-pale: #feeb87;
+  --color-cream: #f4ecd8;
+  --color-muted: #cdbf9f;
+
+  /* Services page surfaces */
+  --color-green-deep: #041208;
+  --color-green-card: #101b13;
+  --color-olive: #6f551d;
+
+  --font-serif: "Cormorant Garamond", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-sans: "Jost", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-green-dark);
+    color: var(--color-cream);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+/* ===== Motion system (compositor-only: transform + opacity) ===== */
+
+/* Scroll reveal — elements with [data-reveal] rise in once when they enter
+   the viewport (driven by initReveals() in src/lib/scroll.js). */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Route change — soft fade on the page wrapper. */
+@keyframes route-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.route-fade {
+  animation: route-fade-in 250ms ease-out;
+}
+
+/* Hero entrance — headline, script accent, and CTAs rise in sequence. */
+@keyframes hero-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.hero-rise {
+  animation: hero-rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-rise-1 {
+  animation-delay: 150ms;
+}
+.hero-rise-2 {
+  animation-delay: 300ms;
+}
+.hero-rise-3 {
+  animation-delay: 450ms;
+}
+.hero-rise-4 {
+  animation-delay: 600ms;
+}
+
+/* Decorative ornaments — barely-noticeable slow float. */
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.float-slow {
+  animation: float-y 7s ease-in-out infinite;
+}
+
+/* Nav links — animated gold underline. */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px;
+  background: var(--color-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease-out;
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Cards & chips — gentle lift with a soft gold glow. */
+.hover-glow {
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out;
+}
+.hover-glow:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 26px rgba(199, 162, 83, 0.16);
+}
+
+/* Reduced motion: no loops, no rises — content is simply there. */
+@media (prefers-reduced-motion: reduce) {
+  .route-fade,
+  .hero-rise,
+  .float-slow {
+    animation: none;
+  }
+  .hover-glow,
+  .hover-glow:hover {
+    transform: none;
+    transition: none;
+  }
+}

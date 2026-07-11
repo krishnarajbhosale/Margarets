@@ -1,0 +1,107 @@
+{
+  "root": {
+    "width": "1440",
+    "height": "7276",
+    "viewBox": "0 0 1440 7276"
+  },
+  "images": [
+    {
+      "file": "img-00.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 61136,
+      "width": "452",
+      "height": "502"
+    },
+    {
+      "file": "img-01.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 59337,
+      "width": "452",
+      "height": "502"
+    },
+    {
+      "file": "img-02.png",
+      "mime": "image/png",
+      "bytes": 289389,
+      "width": "452",
+      "height": "502"
+    },
+    {
+      "file": "img-03.png",
+      "mime": "image/png",
+      "bytes": 2270887,
+      "width": "1024",
+      "height": "1536"
+    },
+    {
+      "file": "img-04.png",
+      "mime": "image/png",
+      "bytes": 1698881,
+      "width": "1024",
+      "height": "1024"
+    },
+    {
+      "file": "img-05.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 53570,
+      "width": "452",
+      "height": "502"
+    },
+    {
+      "file": "img-06.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 74739,
+      "width": "452",
+      "height": "502"
+    },
+    {
+      "file": "img-07.png",
+      "mime": "image/png",
+      "bytes": 2502788,
+      "width": "1122",
+      "height": "1402"
+    },
+    {
+      "file": "img-08.jpeg",
+      "mime": "image/jpeg",
+      "bytes": 102320,
+      "width": "736",
+      "height": "1313"
+    },
+    {
+      "file": "img-09.png",
+      "mime": "image/png",
+      "bytes": 2472648,
+      "width": "1402",
+      "height": "1122"
+    },
+    {
+      "file": "img-10.png",
+      "mime": "image/png",
+      "bytes": 2401580,
+      "width": "1402",
+      "height": "1122"
+    },
+    {
+      "file": "img-11.png",
+      "mime": "image/png",
+      "bytes": 2483711,
+      "width": "1402",
+      "height": "1122"
+    },
+    {
+      "file": "img-12.png",
+      "mime": "image/png",
+      "bytes": 2487324,
+      "width": "1024",
+      "height": "1536"
+    },
+    {
+      "file": "img-13.png",
+      "mime": "image/png",
+      "bytes": 1781814,
+      "width": "1536",
+      "height": "1024"
+    }
+  ]
+}
