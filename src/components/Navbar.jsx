@@ -64,6 +64,11 @@ export default function Navbar({ variant = "outline" }) {
     };
   }, [menuOpen]);
 
+  // Close the overlay whenever the route changes (covers back/forward too).
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   // Resolve a link/cta descriptor into a click handler. Always close the
   // mobile overlay first — it must never outlive a navigation.
   const go = (item) => () => {
@@ -171,66 +176,73 @@ export default function Navbar({ variant = "outline" }) {
         className={`fixed inset-0 -z-10 lg:hidden ${menuOpen ? "" : "pointer-events-none"}`}
         aria-hidden={!menuOpen}
       >
-        {/* Blurred deep-green backdrop with a soft gold glow */}
+        {/* Blurred deep-green backdrop with a soft gold glow near the links */}
         <div
           className={`absolute inset-0 bg-[#041208]/95 backdrop-blur-xl transition-opacity duration-300 ${
             menuOpen ? "opacity-100" : "opacity-0"
           }`}
         />
         <div
-          className={`absolute left-1/2 top-1/2 h-[440px] w-[440px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(199,162,83,0.13),transparent)] transition-opacity duration-500 ${
+          className={`absolute left-1/2 top-[38%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(199,162,83,0.12),transparent)] transition-opacity duration-500 ${
             menuOpen ? "opacity-100" : "opacity-0"
           }`}
         />
-        {/* Giant daisy watermark */}
+        {/* Oversized daisy watermark, cropped into the bottom-right corner */}
         <img
           src={daisyMark}
           alt=""
           aria-hidden="true"
-          className={`pointer-events-none absolute left-1/2 top-1/2 h-[380px] w-auto -translate-x-1/2 -translate-y-1/2 select-none transition-opacity duration-500 ${
-            menuOpen ? "opacity-[0.06]" : "opacity-0"
+          className={`pointer-events-none absolute -bottom-20 -right-20 h-[340px] w-auto select-none transition-opacity duration-700 ${
+            menuOpen ? "opacity-[0.05]" : "opacity-0"
           }`}
         />
 
         {menuOpen && (
-          <div className="relative flex h-full flex-col overflow-y-auto px-8 pb-8 pt-24">
-            {/* Links — staggered rise-in, gold hairlines between */}
-            <nav className="flex flex-1 flex-col items-center justify-center">
+          <div className="relative flex h-full flex-col px-8 pt-24 pb-[calc(env(safe-area-inset-bottom)+1.75rem)]">
+            {/* Links — index accents, gold serif, active dot; staggered rise-in */}
+            <nav className="flex flex-1 flex-col justify-center">
               {mobileLinks.map((link, i) => {
                 const active = link.to
                   ? location.pathname === link.to
                   : location.pathname === "/";
                 return (
-                  <div key={link.key} className="flex w-full flex-col items-center">
-                    {i > 0 && <span className="h-px w-10 bg-gold/25" />}
-                    <button
-                      onClick={go(link)}
-                      style={{ animationDelay: `${120 + i * 70}ms` }}
-                      className={`hero-rise w-full py-4 text-center font-serif text-[26px] tracking-[0.14em] transition-colors ${
-                        active ? "text-gold" : "text-cream/90 hover:text-gold"
+                  <button
+                    key={link.key}
+                    onClick={go(link)}
+                    style={{ animationDelay: `${120 + i * 70}ms` }}
+                    className="hero-rise group flex w-full items-center gap-5 py-4 text-left"
+                  >
+                    <span className="font-sans text-[12px] tracking-[0.3em] text-gold/55">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className={`font-serif text-[30px] tracking-[0.05em] transition-colors ${
+                        active ? "text-gold" : "text-cream/90 group-hover:text-gold"
                       }`}
                     >
                       {link.label}
-                    </button>
-                  </div>
+                    </span>
+                    {active && <span className="ml-auto h-2 w-2 rounded-full bg-gold" />}
+                  </button>
                 );
               })}
             </nav>
 
-            {/* Bottom actions: booking CTA + salon switcher */}
+            {/* Bottom actions: booking CTA + salon switcher, pinned above the
+                home-indicator via safe-area padding on the wrapper. */}
             <div
-              className="hero-rise flex flex-col items-center gap-4"
-              style={{ animationDelay: `${120 + mobileLinks.length * 70 + 60}ms` }}
+              className="hero-rise flex flex-col items-stretch gap-4"
+              style={{ animationDelay: `${120 + mobileLinks.length * 70 + 80}ms` }}
             >
               <button
                 onClick={instantBook}
-                className="w-full max-w-[340px] rounded-md bg-gold px-8 py-4 font-sans text-[13px] tracking-[0.2em] text-green-darkest transition-colors hover:bg-gold-bright"
+                className="w-full rounded-md bg-gold px-8 py-4 font-sans text-[13px] tracking-[0.2em] text-green-darkest transition-colors hover:bg-gold-bright"
               >
                 {t("nav.bookCta").toUpperCase()} ↗
               </button>
               <button
                 onClick={switchLocation}
-                className="flex items-center gap-3 rounded-full border border-gold/35 px-6 py-2.5 font-sans text-[12px] tracking-[0.18em] text-cream/85 transition-colors hover:border-gold hover:text-gold"
+                className="mx-auto flex items-center gap-3 rounded-full border border-gold/35 px-6 py-2.5 font-sans text-[12px] tracking-[0.18em] text-cream/85 transition-colors hover:border-gold hover:text-gold"
               >
                 <Flag code={other.code} className="h-4 w-6 rounded-sm" />
                 {switchLabel.toUpperCase()}

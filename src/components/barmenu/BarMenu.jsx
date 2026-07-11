@@ -1,6 +1,6 @@
 import bmTitle from "../../assets/images/bm-title.webp";
 import bmDaisy from "../../assets/images/bm-daisy.webp";
-import bmBulb from "../../assets/images/bm-bulb.webp";
+import lightBulb from "../../assets/images/LightBulb.webp";
 import daisyMark from "../../assets/images/daisy-mark.webp";
 import beer from "../../assets/images/bm-beer.webp";
 import coffee from "../../assets/images/bm-coffee.webp";
@@ -97,11 +97,15 @@ export default function BarMenu() {
 
         {/* Menu cards */}
         <div className="relative mt-12 flex flex-col gap-7 pb-4">
-          {/* Hanging bulb in the left margin (cord + bulb) */}
-          <div className="pointer-events-none absolute -left-6 top-[-165px] z-20 hidden flex-col items-center lg:flex">
-            <span className="h-[235px] w-[2px] bg-[#3a1712]" />
-            <img src={bmBulb} alt="" aria-hidden="true" className="h-[205px] w-auto select-none" />
-          </div>
+          {/* Hanging Edison bulb — cord, bulb, and warm glow baked into one
+              image. Pinned to the viewport's left edge (independent of the
+              centered container) so it hangs in the far-left margin at any width. */}
+          <img
+            src={lightBulb}
+            alt=""
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[calc(50%-50vw)] top-[-150px] z-20 hidden h-[560px] w-auto select-none lg:block"
+          />
 
           {ITEMS.map((item) => (
             <article
