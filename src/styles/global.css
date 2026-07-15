@@ -21,6 +21,8 @@
   --font-serif: "Cormorant Garamond", serif;
   --font-script: "Great Vibes", cursive;
   --font-sans: "Jost", sans-serif;
+  --font-display: "Cinzel Decorative", serif;
+  --font-accent: "Luxurious Script", cursive;
 }
 
 @layer base {

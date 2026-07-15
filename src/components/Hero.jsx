@@ -11,11 +11,7 @@ const HERO_IMG = {
 };
 
 function Sparkle({ className = "" }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
-      <path d="M12 0 C13 7 17 11 24 12 C17 13 13 17 12 24 C11 17 7 13 0 12 C7 11 11 7 12 0 Z" />
-    </svg>
-  );
+  
 }
 
 export default function Hero() {
@@ -51,7 +47,7 @@ export default function Hero() {
         src={sparkle}
         alt=""
         aria-hidden="true"
-        className="float-slow pointer-events-none absolute left-[1%] top-0 z-0 h-full w-auto select-none opacity-90"
+        className="float-slow pointer-events-none absolute left-[1%] top-[-9%] z-0 h-full w-auto select-none opacity-100"
       />
 
       {/* Left content */}
@@ -62,11 +58,11 @@ export default function Hero() {
         </p>
         <span className="hero-rise mb-7 block h-px w-12 bg-gold" />
 
-        <h1 className="hero-rise hero-rise-1 font-serif text-[42px] font-medium leading-[1.04] tracking-wide sm:text-[56px] lg:text-[66px]">
-          <span className="block text-cream">{t("hero.title1")}</span>
-          <span className="block text-gold">{t("hero.title2")}</span>
+        <h1 className="hero-rise hero-rise-1 font-display text-[42px] font-medium leading-[1.04] tracking-wide sm:text-[50px] lg:text-[66px]">
+          <span className="block text-white">{t("hero.title1")}</span>
+          <span className="block text-white">{t("hero.title2")}</span>
         </h1>
-        <span className="hero-rise hero-rise-2 mt-1 flex items-center gap-3 font-script text-[48px] leading-none text-gold sm:text-[62px] lg:text-[74px]">
+        <span className="hero-rise hero-rise-2 mt-1 flex items-center gap-3 font-accent text-[48px] leading-none text-gold sm:text-[78px] lg:text-[100px]">
           {data.heroAccent}
           <Sparkle className="h-5 w-5" />
         </span>
