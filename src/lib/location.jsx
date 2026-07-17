@@ -175,9 +175,11 @@ export function LocationProvider({ children }) {
     }
   }, []);
 
-  // First visit only: true while we try to auto-route by the visitor's location.
-  // A prior saved choice, no Geolocation support, or a refusal all resolve this
-  // to false — at which point the manual chooser (LocationSplash) takes over.
+  // First visit only: true while geolocation tries to auto-route in the
+  // BACKGROUND. The chooser splash paints immediately (fast LCP — it never
+  // waits on the permission prompt); if geolocation resolves to a salon before
+  // the visitor taps a card, we auto-route and the splash dismisses itself.
+  // Refusal / timeout simply leaves the chooser up.
   const [geoPending, setGeoPending] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -204,11 +206,19 @@ export function LocationProvider({ children }) {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         const c = await countryFromCoords(pos.coords.latitude, pos.coords.longitude);
-        if (c) setLocation(c); // matched a salon → auto-route, skip the popup
+        // Auto-apply only if the visitor hasn't tapped a card in the meantime.
+        let alreadyChosen = false;
+        try {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          alreadyChosen = saved === "mx" || saved === "us";
+        } catch {
+          /* storage unavailable */
+        }
+        if (c && !alreadyChosen) setLocation(c);
         done();
       },
-      done, // refused / unavailable → fall back to the chooser popup
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 600000 }
+      done, // refused / unavailable → the chooser stays up
+      { enableHighAccuracy: false, timeout: 6000, maximumAge: 600000 }
     );
   }, [geoPending, setLocation]);
 
@@ -216,13 +226,35 @@ export function LocationProvider({ children }) {
   const data = LOCATIONS[active];
   const lang = active === "mx" ? "es" : "en";
 
-  // Per-location document metadata + <html lang>.
+  // Per-location document metadata: title, description, regional <html lang>,
+  // and Open Graph / Twitter cards so shared links look branded. (Static
+  // fallbacks for non-JS crawlers live in index.html.)
   useEffect(() => {
     document.title = data.metaTitle;
-    document.documentElement.lang = lang;
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute("content", data.metaDescription);
-  }, [data, lang]);
+    document.documentElement.lang = active === "mx" ? "es-MX" : "en-US";
+
+    const setMeta = (attr, name, content) => {
+      let el = document.head.querySelector(`meta[${attr}="${name}"]`);
+      if (!el) {
+        el = document.createElement("meta");
+        el.setAttribute(attr, name);
+        document.head.appendChild(el);
+      }
+      el.setAttribute("content", content);
+    };
+
+    setMeta("name", "description", data.metaDescription);
+    setMeta("property", "og:title", data.metaTitle);
+    setMeta("property", "og:description", data.metaDescription);
+    setMeta("property", "og:type", "website");
+    setMeta("property", "og:site_name", "Margaret's Beauty Bar");
+    setMeta("property", "og:locale", active === "mx" ? "es_MX" : "en_US");
+    setMeta("property", "og:image", new URL("/og-image.webp", window.location.origin).href);
+    setMeta("name", "twitter:card", "summary_large_image");
+    setMeta("name", "twitter:title", data.metaTitle);
+    setMeta("name", "twitter:description", data.metaDescription);
+    setMeta("name", "twitter:image", new URL("/og-image.webp", window.location.origin).href);
+  }, [data, active]);
 
   return (
     <LocationContext.Provider value={{ code: active, chosen: code !== null, data, lang, geoPending, setLocation }}>
@@ -254,45 +286,26 @@ export function useCopy() {
 }
 
 /**
- * Shown briefly on a first visit while we auto-detect the visitor's location.
- * Bilingual because the salon (and therefore the language) isn't chosen yet.
- */
-function DetectingOverlay() {
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[linear-gradient(180deg,#041208_0%,#041208_55%,#041208_100%)] px-6">
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(199,162,83,0.10),transparent)]" />
-      <div className="relative flex flex-col items-center text-center">
-        <img src={daisyMark} alt="" aria-hidden="true" width="180" height="180" className="float-slow h-14 w-auto select-none" />
-        <p className="mt-6 font-script text-[30px] leading-none text-gold sm:text-[38px]">Welcome · Bienvenidos</p>
-        <p className="mt-3 font-sans text-[12px] tracking-[0.25em] text-gold-soft/80">
-          FINDING YOUR NEAREST SALON · BUSCANDO TU SALÓN
-        </p>
-        <span className="mt-6 flex gap-1.5" aria-hidden="true">
-          <span className="h-2 w-2 animate-pulse rounded-full bg-gold [animation-delay:0ms]" />
-          <span className="h-2 w-2 animate-pulse rounded-full bg-gold [animation-delay:200ms]" />
-          <span className="h-2 w-2 animate-pulse rounded-full bg-gold [animation-delay:400ms]" />
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/**
- * First-visit country chooser. Rendered on top of the page (the site is
- * visible and interactive underneath once a card is picked). Fades out and
- * never returns after a choice is stored. Only appears if geolocation
- * auto-routing was declined or inconclusive.
+ * First-visit country chooser. Paints immediately (it is the first-visit LCP
+ * surface — it must never wait on the geolocation prompt); geolocation runs in
+ * the background and auto-dismisses it when a salon matches. Fades out and
+ * never returns after a choice is stored.
  */
 export function LocationSplash() {
   const { chosen, geoPending, setLocation } = useLocationData();
   const [closing, setClosing] = useState(false);
   const [gone, setGone] = useState(false);
+  // Mount a beat after first paint: the hero underneath becomes the LCP and
+  // the chooser fades in over it instead of blocking the initial render.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const tm = setTimeout(() => setMounted(true), 180);
+    return () => clearTimeout(tm);
+  }, []);
 
   if (gone) return null;
-  // Auto-detecting the visitor's location: show a brief branded loader instead
-  // of the chooser, so the popup only surfaces if geolocation is declined.
-  if (geoPending && !chosen) return <DetectingOverlay />;
   if (chosen && !closing) return null;
+  if (!mounted) return null;
 
   const pick = (c) => () => {
     setLocation(c);
@@ -302,7 +315,7 @@ export function LocationSplash() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[linear-gradient(180deg,#041208_0%,#041208_55%,#041208_100%)] px-6 transition-[opacity,transform] duration-500 ease-out ${
+      className={`route-fade fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[linear-gradient(180deg,#041208_0%,#041208_55%,#041208_100%)] px-6 transition-[opacity,transform] duration-500 ease-out ${
         closing ? "pointer-events-none scale-[1.03] opacity-0" : "opacity-100"
       }`}
     >
@@ -350,6 +363,18 @@ export function LocationSplash() {
             </span>
           </button>
         </div>
+
+        {/* Background geolocation hint — toggled by opacity (not unmounted) so
+            the splash never repaints its layout mid-measurement. */}
+        <p
+          aria-hidden={!geoPending}
+          className={`mt-8 flex items-center gap-2 font-sans text-[11px] tracking-[0.22em] text-gold-soft/70 transition-opacity duration-500 ${
+            geoPending ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-gold" aria-hidden="true" />
+          FINDING YOUR NEAREST SALON · BUSCANDO TU SALÓN
+        </p>
       </div>
     </div>
   );

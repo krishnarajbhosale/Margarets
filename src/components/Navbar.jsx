@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import daisyMark from "../assets/images/daisy-mark.webp";
 import { scrollToId } from "../lib/scroll.js";
@@ -26,6 +26,8 @@ export default function Navbar({ variant = "outline" }) {
   const location = useLocation();
   const { code, data, setLocation } = useLocationData();
   const t = useCopy();
+  const overlayRef = useRef(null);
+  const toggleRef = useRef(null);
   const other = LOCATIONS[code === "mx" ? "us" : "mx"];
   const navLinks = buildLinks(t, data.hasBar);
   // The switch label reads in the DESTINATION's language ("Switch to USA" for
@@ -34,6 +36,10 @@ export default function Navbar({ variant = "outline" }) {
   // The overlay's bottom CTA is the booking path on mobile; drop the duplicate
   // nav entry that triggers the same external booking site.
   const mobileLinks = navLinks.filter((l) => !l.external);
+
+  // Route-aware nav state (home is a section anchor, so match "/" directly).
+  const isActive = (link) =>
+    link.to ? location.pathname === link.to : link.home ? location.pathname === "/" : false;
 
   // Instant booking → the active salon's external platform (Welns / GlossGenius).
   const instantBook = () => {
@@ -49,7 +55,7 @@ export default function Navbar({ variant = "outline" }) {
   };
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -68,6 +74,41 @@ export default function Navbar({ variant = "outline" }) {
   useEffect(() => {
     setMenuOpen(false);
   }, [location.pathname]);
+
+  // While open: Escape closes (focus returns to the toggle) and Tab is trapped
+  // inside the overlay. The first link receives focus after the entrance.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+        toggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const root = overlayRef.current;
+      if (!root) return;
+      const items = root.querySelectorAll("button, a[href]");
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    const focusTimer = setTimeout(() => {
+      overlayRef.current?.querySelector("button")?.focus();
+    }, 80);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      clearTimeout(focusTimer);
+    };
+  }, [menuOpen]);
 
   // Resolve a link/cta descriptor into a click handler. Always close the
   // mobile overlay first — it must never outlive a navigation.
@@ -94,121 +135,133 @@ export default function Navbar({ variant = "outline" }) {
   };
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-gold/20 bg-green-darkest/95 py-3 shadow-lg shadow-black/30 backdrop-blur"
-          : "py-5"
-      }`}
-    >
-      <div className="flex w-full items-center justify-between gap-4 px-6 sm:px-10">
-        {/* Brand */}
-        <button
-          onClick={() => {
-            navigate("/");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-          className="flex shrink-0 items-center gap-3 leading-none"
-        >
-          <img src={daisyMark} alt="Margaret's Beauty Bar" className="h-10 w-auto sm:h-12" />
-          <span className="flex flex-col items-start">
-            <span className="font-script text-[26px] text-gold sm:text-[30px]">Margaret's</span>
-            <span className="-mt-1 pl-1 font-sans text-[9px] tracking-[0.4em] text-gold-soft sm:text-[10px]">
-              BEAUTY BAR
-            </span>
-          </span>
-        </button>
-
-        {/* Links */}
-        <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
-          {navLinks.map((link) => (
-            <button
-              key={link.key}
-              onClick={go(link)}
-              className="nav-link font-sans text-[13px] tracking-[0.18em] text-cream/90 transition-colors hover:text-gold"
-            >
-              {link.label}
-            </button>
-          ))}
-        </nav>
-
-        <div className="flex items-center gap-3">
-          {/* Location switcher: shows the OTHER salon's flag, tooltip in the
-              destination's language. */}
-          <button
-            onClick={switchLocation}
-            title={switchLabel}
-            aria-label={switchLabel}
-            className="hidden h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 transition-all duration-300 hover:scale-105 hover:border-gold sm:flex"
-          >
-            <Flag code={other.code} className="h-4 w-6 rounded-sm" />
-          </button>
-
-          {/* CTA → instant external booking. Hidden on phones — the bar is too
-              tight and the mobile overlay menu carries its own booking CTA. */}
-          <button
-            onClick={instantBook}
-            className={
-              variant === "outline"
-                ? "hidden shrink-0 rounded-md border border-olive bg-green-card/40 px-5 py-2.5 font-sans text-[12px] tracking-[0.12em] text-gold-soft transition-colors hover:border-gold hover:bg-gold hover:text-green-darkest sm:block sm:px-7"
-                : "hidden shrink-0 rounded border border-gold px-5 py-2.5 font-sans text-[12px] tracking-[0.2em] text-gold transition-colors hover:bg-gold hover:text-green-darkest sm:block sm:px-6"
-            }
-          >
-            {t("nav.bookCta")}
-          </button>
-
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label="Toggle menu"
-            aria-expanded={menuOpen}
-            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
-          >
-            <span className={`h-px w-6 bg-gold transition-transform ${menuOpen ? "translate-y-[6px] rotate-45" : ""}`} />
-            <span className={`h-px w-6 bg-gold transition-opacity ${menuOpen ? "opacity-0" : ""}`} />
-            <span className={`h-px w-6 bg-gold transition-transform ${menuOpen ? "-translate-y-[6px] -rotate-45" : ""}`} />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile menu — full-screen overlay behind the bar */}
-      <div
-        className={`fixed inset-0 -z-10 lg:hidden ${menuOpen ? "" : "pointer-events-none"}`}
-        aria-hidden={!menuOpen}
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? "border-b border-gold/20 bg-green-darkest/95 py-3 shadow-lg shadow-black/30 backdrop-blur"
+            : "py-5"
+        }`}
       >
-        {/* Blurred deep-green backdrop with a soft gold glow near the links */}
+        <div className="flex w-full items-center justify-between gap-4 px-6 sm:px-10">
+          {/* Brand */}
+          <button
+            onClick={() => {
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+            aria-label="Margaret's Beauty Bar — home"
+            className="flex shrink-0 items-center gap-3 leading-none"
+          >
+            <img src={daisyMark} alt="Margaret's Beauty Bar" className="h-10 w-auto sm:h-12" />
+            <span className="flex flex-col items-start">
+              <span className="font-script text-[26px] text-gold sm:text-[30px]">Margaret's</span>
+              <span className="-mt-1 pl-1 font-sans text-[9px] tracking-[0.4em] text-gold-soft sm:text-[10px]">
+                BEAUTY BAR
+              </span>
+            </span>
+          </button>
+
+          {/* Links */}
+          <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
+            {navLinks.map((link) => (
+              <button
+                key={link.key}
+                onClick={go(link)}
+                aria-current={isActive(link) ? "page" : undefined}
+                className={`nav-link font-sans text-[13px] tracking-[0.18em] transition-colors hover:text-gold ${
+                  isActive(link) ? "is-active" : "text-cream/90"
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {/* Location switcher: shows the OTHER salon's flag, tooltip in the
+                destination's language. */}
+            <button
+              onClick={switchLocation}
+              title={switchLabel}
+              aria-label={switchLabel}
+              className="hidden h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold/40 transition-all duration-300 hover:scale-105 hover:border-gold hover:shadow-[0_0_14px_rgba(199,162,83,0.35)] sm:flex"
+            >
+              <Flag code={other.code} className="h-4 w-6 rounded-sm" />
+            </button>
+
+            {/* CTA → instant external booking. Hidden on phones — the bar is too
+                tight and the mobile overlay menu carries its own booking CTA. */}
+            <button
+              onClick={instantBook}
+              className={
+                variant === "outline"
+                  ? "btn-sheen hidden shrink-0 rounded-md border border-olive bg-green-card/40 px-5 py-2.5 font-sans text-[12px] tracking-[0.12em] text-gold-soft hover:border-gold hover:bg-gold hover:text-green-darkest sm:block sm:px-7"
+                  : "btn-sheen hidden shrink-0 rounded border border-gold px-5 py-2.5 font-sans text-[12px] tracking-[0.2em] text-gold hover:bg-gold hover:text-green-darkest sm:block sm:px-6"
+              }
+            >
+              {t("nav.bookCta")}
+            </button>
+
+            {/* Mobile menu toggle — 48px tap target, morphs into an X */}
+            <button
+              ref={toggleRef}
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              className="flex h-12 w-12 flex-col items-center justify-center gap-[5px] lg:hidden"
+            >
+              <span className={`h-px w-6 bg-gold transition-transform duration-300 ${menuOpen ? "translate-y-[6px] rotate-45" : ""}`} />
+              <span className={`h-px w-6 bg-gold transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`h-px w-6 bg-gold transition-transform duration-300 ${menuOpen ? "-translate-y-[6px] -rotate-45" : ""}`} />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile menu — a SIBLING of the header, never its child: backdrop-filter
+          on the scrolled header would otherwise become the containing block for
+          this fixed overlay and clamp it to the bar (the "transparent menu over
+          the footer" bug). Solid brand green so page content can never bleed
+          through, z-40 so the bar + X above (z-50) stay usable. */}
+      <div
+        ref={overlayRef}
+        role="dialog"
+        aria-modal="true"
+        aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-40 lg:hidden ${menuOpen ? "" : "pointer-events-none"}`}
+      >
+        {/* Fully opaque deep-green backdrop */}
         <div
-          className={`absolute inset-0 bg-[#041208]/95 backdrop-blur-xl transition-opacity duration-300 ${
+          className={`absolute inset-0 bg-green-darkest transition-opacity duration-300 ${
             menuOpen ? "opacity-100" : "opacity-0"
           }`}
         />
-        <div
-          className={`absolute left-1/2 top-[38%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(199,162,83,0.12),transparent)] transition-opacity duration-500 ${
-            menuOpen ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        {/* Oversized daisy watermark, cropped into the bottom-right corner */}
-        <img
-          src={daisyMark}
-          alt=""
-          aria-hidden="true"
-          className={`pointer-events-none absolute -bottom-20 -right-20 h-[340px] w-auto select-none transition-opacity duration-700 ${
-            menuOpen ? "opacity-[0.05]" : "opacity-0"
-          }`}
-        />
+        {menuOpen && (
+          <>
+            {/* Soft gold glow near the links */}
+            <div className="absolute left-1/2 top-[38%] h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(199,162,83,0.12),transparent)]" />
+            {/* Oversized daisy watermark, cropped into the bottom-right corner */}
+            <img
+              src={daisyMark}
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-20 -right-20 h-[340px] w-auto max-w-none select-none opacity-[0.05]"
+            />
+          </>
+        )}
 
         {menuOpen && (
-          <div className="relative flex h-full flex-col px-8 pt-24 pb-[calc(env(safe-area-inset-bottom)+1.75rem)]">
+          <div className="relative flex h-full flex-col overflow-y-auto px-8 pt-24 pb-[calc(env(safe-area-inset-bottom)+1.75rem)]">
             {/* Links — index accents, gold serif, active dot; staggered rise-in */}
             <nav className="flex flex-1 flex-col justify-center">
               {mobileLinks.map((link, i) => {
-                const active = link.to
-                  ? location.pathname === link.to
-                  : location.pathname === "/";
+                const active = isActive(link);
                 return (
                   <button
                     key={link.key}
                     onClick={go(link)}
+                    aria-current={active ? "page" : undefined}
                     style={{ animationDelay: `${120 + i * 70}ms` }}
                     className="hero-rise group flex w-full items-center gap-5 py-4 text-left"
                   >
@@ -236,13 +289,13 @@ export default function Navbar({ variant = "outline" }) {
             >
               <button
                 onClick={instantBook}
-                className="w-full rounded-md bg-gold px-8 py-4 font-sans text-[13px] tracking-[0.2em] text-green-darkest transition-colors hover:bg-gold-bright"
+                className="btn-sheen w-full rounded-md bg-gold px-8 py-4 font-sans text-[13px] tracking-[0.2em] text-green-darkest hover:bg-gold-bright"
               >
                 {t("nav.bookCta").toUpperCase()} ↗
               </button>
               <button
                 onClick={switchLocation}
-                className="mx-auto flex items-center gap-3 rounded-full border border-gold/35 px-6 py-2.5 font-sans text-[12px] tracking-[0.18em] text-cream/85 transition-colors hover:border-gold hover:text-gold"
+                className="mx-auto flex min-h-12 items-center gap-3 rounded-full border border-gold/35 px-6 py-2.5 font-sans text-[12px] tracking-[0.18em] text-cream/85 transition-colors hover:border-gold hover:text-gold"
               >
                 <Flag code={other.code} className="h-4 w-6 rounded-sm" />
                 {switchLabel.toUpperCase()}
@@ -251,6 +304,6 @@ export default function Navbar({ variant = "outline" }) {
           </div>
         )}
       </div>
-    </header>
+    </>
   );
 }

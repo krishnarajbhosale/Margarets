@@ -190,7 +190,7 @@ export default function Footer() {
           </div>
           <button
             onClick={() => openBooking(data.bookingUrl)}
-            className="mt-2 rounded-md bg-gold px-8 py-3 font-sans text-[12px] tracking-[0.16em] text-green-darkest transition-colors hover:bg-gold-bright"
+            className="btn-sheen mt-2 rounded-md bg-gold px-8 py-3 font-sans text-[12px] tracking-[0.16em] text-green-darkest hover:bg-gold-bright"
           >
             {t("footer.bookCta")}
           </button>

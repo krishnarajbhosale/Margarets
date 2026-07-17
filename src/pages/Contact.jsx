@@ -133,14 +133,22 @@ export default function Contact() {
       : "",
   });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const submit = (e) => {
     e.preventDefault();
+    if (sending) return;
     if (!form.name.trim()) return setError(t("contact.errName"));
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return setError(t("contact.errEmail"));
     setError("");
-    setSent(true);
+    // Brief "sending" beat so the tap always gives visible feedback before the
+    // success state appears.
+    setSending(true);
+    setTimeout(() => {
+      setSending(false);
+      setSent(true);
+    }, 700);
   };
 
   return (
@@ -306,12 +314,17 @@ export default function Contact() {
                 </div>
                 <Field label={t("contact.email")} type="email" value={form.email} onChange={set("email")} placeholder={t("contact.emailPh")} />
                 <Field label={t("contact.message")} textarea value={form.message} onChange={set("message")} placeholder={t("contact.messagePh")} />
-                {error && <p className="font-sans text-[13px] text-red-300">{error}</p>}
+                {error && (
+                  <p role="alert" className="font-sans text-[13px] text-red-300">
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="mt-1 rounded-md bg-gold px-8 py-3.5 font-sans text-[13px] tracking-[0.16em] text-green-darkest transition-colors hover:bg-gold-bright"
+                  disabled={sending}
+                  className="btn-sheen mt-1 rounded-md bg-gold px-8 py-3.5 font-sans text-[13px] tracking-[0.16em] text-green-darkest hover:bg-gold-bright disabled:cursor-wait disabled:opacity-70"
                 >
-                  {t("contact.submit")}
+                  {sending ? t("contact.sending") : t("contact.submit")}
                 </button>
               </form>
             )}

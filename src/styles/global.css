@@ -121,7 +121,7 @@
   animation: float-y 7s ease-in-out infinite;
 }
 
-/* Nav links — animated gold underline. */
+/* Nav links — animated gold underline; .is-active keeps it lit. */
 .nav-link {
   position: relative;
 }
@@ -139,6 +139,49 @@
 }
 .nav-link:hover::after {
   transform: scaleX(1);
+}
+.nav-link.is-active {
+  color: var(--color-gold);
+}
+.nav-link.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Primary gold CTAs — soft sheen sweep + 1px lift on hover (transform-only). */
+.btn-sheen {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease-out,
+    box-shadow 0.25s ease-out,
+    background-color 0.2s ease-out,
+    color 0.2s ease-out,
+    border-color 0.2s ease-out;
+}
+.btn-sheen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.btn-sheen:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(199, 162, 83, 0.25);
+}
+.btn-sheen:hover::before {
+  transform: translateX(400%) skewX(-20deg);
+}
+
+/* Keyboard focus — always visible, always brand gold. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
 }
 
 /* Cards & chips — gentle lift with a soft gold glow. */
@@ -163,5 +206,15 @@
   .hover-glow:hover {
     transform: none;
     transition: none;
+  }
+  .btn-sheen,
+  .btn-sheen:hover {
+    transform: none;
+  }
+  .btn-sheen::before {
+    display: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

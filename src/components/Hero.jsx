@@ -58,7 +58,7 @@ export default function Hero() {
         src={sparkle}
         alt=""
         aria-hidden="true"
-        className="float-slow pointer-events-none absolute left-[1%] top-[-9%] z-0 h-full w-auto select-none opacity-100"
+        className="float-slow pointer-events-none absolute left-[1%] top-[-9%] z-0 h-full w-auto max-w-none select-none opacity-100"
       />
 
       {/* Left content */}
@@ -86,7 +86,7 @@ export default function Hero() {
           {/* Primary → instant external booking */}
           <button
             onClick={() => openBooking(data.bookingUrl)}
-            className="group flex items-center gap-2 rounded bg-gold px-7 py-3.5 font-sans text-[13px] tracking-[0.15em] text-green-darkest transition-colors hover:bg-gold-bright"
+            className="btn-sheen group flex items-center gap-2 rounded bg-gold px-7 py-3.5 font-sans text-[13px] tracking-[0.15em] text-green-darkest hover:bg-gold-bright"
           >
             {t("hero.ctaPrimary")}
             <span className="transition-transform group-hover:translate-x-1">&#8594;</span>

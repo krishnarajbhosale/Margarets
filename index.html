@@ -35,8 +35,26 @@
       name="description"
       content="Margaret's Beauty Bar — premium beauty treatments and an upscale social atmosphere in one elevated space."
     />
-    <!-- Above-the-fold hero image (Vite rewrites this to the hashed asset) -->
+    <!-- Open Graph / Twitter fallbacks for non-JS crawlers (WhatsApp, FB…).
+         The active locale refines these at runtime (see LocationProvider). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Margaret's Beauty Bar" />
+    <meta property="og:title" content="Margaret's Beauty Bar" />
+    <meta
+      property="og:description"
+      content="Premium beauty treatments and an upscale social atmosphere in one elevated space."
+    />
+    <meta property="og:image" content="/og-image.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Margaret's Beauty Bar" />
+    <meta
+      name="twitter:description"
+      content="Premium beauty treatments and an upscale social atmosphere in one elevated space."
+    />
+    <meta name="twitter:image" content="/og-image.webp" />
+    <!-- Above-the-fold hero images (Vite rewrites these to the hashed assets) -->
     <link rel="preload" as="image" href="/src/assets/images/hero-interior.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/src/assets/images/rectangle-320.webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

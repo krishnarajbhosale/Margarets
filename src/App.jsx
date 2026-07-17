@@ -2,6 +2,7 @@ import { Suspense, lazy, useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
+import ScrollTopButton from "./components/ScrollTopButton.jsx";
 import { LocationProvider, LocationSplash, useLocationData } from "./lib/location.jsx";
 import { initReveals } from "./lib/scroll.js";
 import daisyMark from "./assets/images/daisy-mark.webp";
@@ -12,6 +13,7 @@ const Services = lazy(() => import("./pages/Services.jsx"));
 const Menu = lazy(() => import("./pages/Menu.jsx"));
 const Contact = lazy(() => import("./pages/Contact.jsx"));
 const Book = lazy(() => import("./pages/Book.jsx"));
+const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 // Minimal branded fallback while a page chunk loads.
 function PageLoader() {
@@ -31,6 +33,11 @@ function Shell() {
     initReveals();
   }, []);
 
+  // Every route change starts at the top of the new page.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <>
       <Navbar />
@@ -40,17 +47,20 @@ function Shell() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
-            {/* The bar is a Mexico-only experience. */}
+            {/* The drinks/refreshments menu — gated per location. */}
             <Route
               path="/menu"
               element={data.hasBar ? <Menu /> : <Navigate to="/" replace />}
             />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book" element={<Book />} />
+            {/* Branded 404 for anything unmatched, in both locales. */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </div>
       <Footer />
+      <ScrollTopButton />
       <LocationSplash />
     </>
   );

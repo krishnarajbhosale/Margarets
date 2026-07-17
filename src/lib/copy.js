@@ -14,6 +14,13 @@ export const COPY = {
       contact: "CONTACT",
       bookCta: "Book Appointment",
       switchToOther: "Switch to USA", // shown to MX users (destination language)
+      backToTop: "Back to top",
+    },
+    notFound: {
+      script: "Lost Among The Daisies",
+      title: "PAGE NOT FOUND",
+      body: "The page you're looking for has drifted away. Let's take you back to the beauty.",
+      cta: "BACK TO HOME",
     },
     hero: {
       title1: "An Elevated",
@@ -120,6 +127,7 @@ export const COPY = {
       message: "MESSAGE",
       messagePh: "Tell us how we can pamper you…",
       submit: "SEND MESSAGE",
+      sending: "SENDING…",
       errName: "Please enter your name.",
       errEmail: "Please enter a valid email.",
       successTitle: "Thank You!",
@@ -178,6 +186,13 @@ export const COPY = {
       contact: "CONTACTO",
       bookCta: "Reservar Cita",
       switchToOther: "Cambiar a México", // shown to US users (destination language)
+      backToTop: "Volver arriba",
+    },
+    notFound: {
+      script: "Perdida Entre Las Margaritas",
+      title: "PÁGINA NO ENCONTRADA",
+      body: "La página que buscas ya no está aquí. Volvamos a la belleza.",
+      cta: "VOLVER AL INICIO",
     },
     hero: {
       title1: "Un Exclusivo",
@@ -284,6 +299,7 @@ export const COPY = {
       message: "MENSAJE",
       messagePh: "Cuéntanos cómo podemos consentirte…",
       submit: "ENVIAR MENSAJE",
+      sending: "ENVIANDO…",
       errName: "Por favor ingresa tu nombre.",
       errEmail: "Por favor ingresa un correo válido.",
       successTitle: "¡Gracias!",

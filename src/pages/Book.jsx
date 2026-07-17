@@ -194,8 +194,9 @@ export default function Book() {
       </section>
 
       {/* ===== Sticky booking bar ===== */}
+      {/* z-30: must stay under the header (z-50) and mobile menu overlay (z-40). */}
       <div
-        className={`fixed inset-x-0 bottom-0 z-40 transition-transform duration-300 ${
+        className={`fixed inset-x-0 bottom-0 z-30 transition-transform duration-300 ${
           selected.length ? "translate-y-0" : "translate-y-full"
         }`}
       >
@@ -213,7 +214,7 @@ export default function Book() {
             </p>
             <button
               onClick={book}
-              className="w-full rounded-md bg-gold px-8 py-3.5 font-sans text-[13px] tracking-[0.16em] text-green-darkest transition-colors hover:bg-gold-bright sm:w-auto"
+              className="btn-sheen w-full rounded-md bg-gold px-8 py-3.5 font-sans text-[13px] tracking-[0.16em] text-green-darkest hover:bg-gold-bright sm:w-auto"
             >
               {t("book.continue")} &#8594;
             </button>
