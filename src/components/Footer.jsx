@@ -6,7 +6,7 @@ import flourishLeft from "../assets/images/svc-flourish-left.webp";
 import flourishRight from "../assets/images/svc-flourish-right.webp";
 import spaDaisy from "../assets/images/svc-spa-daisy-t.webp";
 import { scrollToId } from "../lib/scroll.js";
-import { openBooking, useCopy, useLocationData } from "../lib/location.jsx";
+import { openBooking, socialLinks, useCopy, useLocationData } from "../lib/location.jsx";
 
 // Fine film-grain texture (same as the Bar Menu cards).
 const GRAIN =
@@ -39,10 +39,10 @@ function Instagram() {
     </svg>
   );
 }
-function Facebook() {
+function TikTok() {
   return (
     <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" fill="currentColor" aria-hidden="true">
-      <path d="M13.5 21v-8h2.5l.4-3h-2.9V8.2c0-.9.3-1.5 1.6-1.5H16.5V4.1C16.1 4 15.1 4 14 4c-2.3 0-3.9 1.4-3.9 4v2H7.5v3h2.6v8h3.4z" />
+      <path d="M16.5 3c.28 2.03 1.42 3.24 3.5 3.5v2.42c-1.2.12-2.26-.28-3.5-1.03v5.83c0 3.06-2.28 5.28-5.2 5.28-2.86 0-5.05-2.2-5.05-5.05 0-2.98 2.35-5.14 5.6-4.86v2.55c-.4-.08-.83-.13-1.28-.1-1.3.09-2.13 1.02-2.06 2.42.06 1.24 1.02 2.13 2.28 2.06 1.28-.06 2.05-.98 2.05-2.4V3h3.16z" />
     </svg>
   );
 }
@@ -101,6 +101,13 @@ export default function Footer() {
   const t = useCopy();
   const explore = buildExplore(t, data.hasBar);
   const serviceLinks = buildServiceLinks(t);
+  // Country-correct social destinations (Instagram / TikTok / WhatsApp).
+  const links = socialLinks(data);
+  const socials = [
+    { Icon: Instagram, label: "Instagram", href: links.instagram },
+    { Icon: TikTok, label: "TikTok", href: links.tiktok },
+    { Icon: WhatsApp, label: "WhatsApp", href: links.whatsapp },
+  ];
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
@@ -168,11 +175,13 @@ export default function Footer() {
             {data.footerTagline}
           </p>
           <div className="mt-1 flex items-center gap-3">
-            {[Instagram, Facebook, WhatsApp].map((Icon, i) => (
+            {socials.map(({ Icon, label, href }) => (
               <a
-                key={i}
-                href={i === 0 ? `https://instagram.com/${data.instagram}` : "#"}
-                aria-label="Social link"
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 text-gold-soft transition-colors hover:border-gold hover:bg-gold hover:text-green-darkest"
               >
                 <Icon />
@@ -288,10 +297,12 @@ export default function Footer() {
           <p className="font-sans text-[12.5px] font-light text-cream/55">
             © {new Date().getFullYear()} Margaret's Beauty Bar. {t("footer.rights")}
           </p>
+          {/* Legal links resolve to the client's PDFs (see LOCATIONS.*.privacyUrl
+              / termsUrl). They open in a new tab once the files are provided. */}
           <p className="flex items-center gap-4 font-sans text-[12.5px] font-light text-cream/55">
-            <a href="#" className="transition-colors hover:text-gold">{t("footer.privacy")}</a>
+            <a href={data.privacyUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold">{t("footer.privacy")}</a>
             <span className="h-3 w-px bg-gold/25" />
-            <a href="#" className="transition-colors hover:text-gold">{t("footer.terms")}</a>
+            <a href={data.termsUrl} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold">{t("footer.terms")}</a>
           </p>
         </div>
       </div>

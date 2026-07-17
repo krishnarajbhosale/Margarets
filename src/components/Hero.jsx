@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import interior from "../assets/images/hero-interior.webp";
 import heroUS from "../assets/images/usahero.webp";
 import sparkle from "../assets/images/hero-sparkle.webp";
+import leftPanel from "../assets/images/rectangle-320.webp";
 import { openBooking, useCopy, useLocationData } from "../lib/location.jsx";
 
 // Each salon leads with its own photo; everything else is shared.
@@ -30,10 +31,20 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative min-h-[580px] overflow-hidden bg-[radial-gradient(120%_120%_at_15%_30%,#10301f_0%,#041208_45%,#041208_100%)] lg:min-h-[660px]"
+      className="relative min-h-[580px] overflow-hidden bg-[#041208] lg:min-h-[660px]"
     >
-      {/* Photo: full-bleed under a dark veil on mobile; right panel with a
-          diagonal clip and softly faded left edge on desktop. */}
+      {/* Left green panel — the Rectangle image, its feathered right/bottom
+          edges blending into the photo and the deep-green base. Sits under the
+          photo, which covers it on mobile. */}
+      <img
+        src={leftPanel}
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute left-0 top-0 z-0 h-full w-full select-none object-cover object-left lg:w-auto"
+      />
+
+      {/* Photo: full-bleed under a dark veil on mobile; right panel at 55% with
+          a diagonal clip and softly faded left edge on desktop. */}
       <div className="absolute right-0 top-0 h-full w-full lg:w-[55%] lg:[clip-path:polygon(9%_0,100%_0,100%_100%,0_100%)]">
         <img
           src={img.src}

@@ -9,7 +9,7 @@ export const COPY = {
     nav: {
       home: "HOME",
       services: "SERVICES",
-      beautyBar: "BEAUTY BAR",
+      beautyBar: "REFRESHMENTS", // USA menu (no alcohol); MX keeps "BEAUTY BAR"
       book: "BOOK APPOINTMENT",
       contact: "CONTACT",
       bookCta: "Book Appointment",
@@ -44,6 +44,7 @@ export const COPY = {
       subtitle: "Carefully Curated Treatments To Relax, Rejuvenate, And Renew.",
       kidsName: "Kids' Nail Polish",
       facialsName: "Facials",
+      manicureName: "Manicure",
       cardSub: "Revitalize And Nourish\nYour Skin",
     },
     servicesPage: {
@@ -101,6 +102,7 @@ export const COPY = {
       subtitle: "Whether you're booking your next indulgence or simply saying hello, we'd love to hear from you. Reach out and let's create something beautiful.",
       visitScript: "Visit Our Beauty Bar",
       visitBody: "Step into a space where premium beauty meets an upscale social atmosphere. Our doors — and our bar — are always open to you.",
+      followUs: "Follow Us",
       infoVisit: "Visit Us",
       infoCall: "Call Us",
       infoEmail: "Email Us",
@@ -130,7 +132,17 @@ export const COPY = {
       bookingMsgIntro: "Hello! I'd like to book the following treatments:",
     },
     barMenu: {
+      // USA has a no-alcohol "Refreshments" menu (see servesAlcohol in
+      // location.jsx). The beer item is only rendered where alcohol is served.
+      title: "Refreshments",
       subtitle: "A Perfect Blend Of Taste, Crafted For Every Mood.",
+      items: {
+        beer: { title: "BEER BAR", tagline: "Cold. Classic.", desc: "A Wide Selection Of Beers For Every Craft-Beer Lover." },
+        coffee: { title: "COFFEE BAR", tagline: "Brewed To Perfection.", desc: "From Espresso To Cappuccino, Savor Every Sip." },
+        tea: { title: "TEA BAR", tagline: "Warm. Soothing. Comforting.", desc: "A Curated Selection Of Premium Teas From Around The World." },
+        soft: { title: "SOFT DRINKS", tagline: "Fresh & Refreshing.", desc: "A Variety Of Soft Drinks To Keep You Refreshed." },
+        water: { title: "WATER & MORE...", tagline: "Stay Hydrated.", desc: "Still Water, Sparkling Water, And More Options." },
+      },
     },
     footer: {
       quickLinks: "EXPLORE",
@@ -146,7 +158,7 @@ export const COPY = {
       terms: "Terms of Service",
       lHome: "Home",
       lServices: "Services",
-      lBarMenu: "Bar Menu",
+      lBarMenu: "Refreshments", // USA; MX keeps "Bar Menu"
       lBook: "Book Appointment",
       lContact: "Contact",
       sNail: "Nail Art",
@@ -196,6 +208,7 @@ export const COPY = {
       subtitle: "Tratamientos Cuidadosamente Seleccionados Para Relajar, Rejuvenecer Y Renovar.",
       kidsName: "Esmaltado Para Niñas",
       facialsName: "Faciales",
+      manicureName: "Manicura",
       cardSub: "Revitaliza Y Nutre\nTu Piel",
     },
     servicesPage: {
@@ -253,6 +266,7 @@ export const COPY = {
       subtitle: "Ya sea que quieras reservar tu próxima consentida o simplemente saludar, nos encantaría saber de ti. Escríbenos y creemos algo hermoso juntas.",
       visitScript: "Visita Nuestro Beauty Bar",
       visitBody: "Entra a un espacio donde la belleza premium se encuentra con un ambiente social de alto nivel. Nuestras puertas — y nuestro bar — siempre están abiertas para ti.",
+      followUs: "Síguenos",
       infoVisit: "Visítanos",
       infoCall: "Llámanos",
       infoEmail: "Escríbenos",
@@ -282,7 +296,15 @@ export const COPY = {
       bookingMsgIntro: "¡Hola! Me gustaría reservar los siguientes tratamientos:",
     },
     barMenu: {
+      title: "Bar Menu",
       subtitle: "La Combinación Perfecta De Sabor, Creada Para Cada Momento.",
+      items: {
+        beer: { title: "BAR DE CERVEZA", tagline: "Fría, Clásica.", desc: "Una Amplia Variedad De Cervezas Para Todo Amante De La Buena Cerveza." },
+        coffee: { title: "BAR DE CAFÉ", tagline: "Preparado A La Perfección.", desc: "Del Espresso Al Capuchino, Disfruta Cada Sorbo." },
+        tea: { title: "BAR DE TÉ", tagline: "Cálido. Relajante. Reconfortante.", desc: "Una Selección De Tés Premium De Todo El Mundo." },
+        soft: { title: "REFRESCOS", tagline: "Frescos Y Refrescantes.", desc: "Una Variedad De Refrescos Para Mantenerte Hidratado." },
+        water: { title: "AGUA Y MUCHO MÁS...", tagline: "Mantente Hidratado.", desc: "Agua Natural, Agua Mineral Y Más Opciones." },
+      },
     },
     footer: {
       quickLinks: "EXPLORAR",

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { openBooking, useCopy, useLang, useLocationData } from "../lib/location.jsx";
+import { openBooking, socialLinks, useCopy, useLang, useLocationData } from "../lib/location.jsx";
 import { displayName } from "../data/services.js";
 import indulgence from "../assets/images/indulgence.webp";
 import daisyMark from "../assets/images/daisy-mark.webp";
@@ -40,6 +40,31 @@ function Clock() {
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+
+/* ---- social glyphs (match the footer) ---- */
+function Instagram() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+function TikTok() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="currentColor" aria-hidden="true">
+      <path d="M16.5 3c.28 2.03 1.42 3.24 3.5 3.5v2.42c-1.2.12-2.26-.28-3.5-1.03v5.83c0 3.06-2.28 5.28-5.2 5.28-2.86 0-5.05-2.2-5.05-5.05 0-2.98 2.35-5.14 5.6-4.86v2.55c-.4-.08-.83-.13-1.28-.1-1.3.09-2.13 1.02-2.06 2.42.06 1.24 1.02 2.13 2.28 2.06 1.28-.06 2.05-.98 2.05-2.4V3h3.16z" />
+    </svg>
+  );
+}
+function WhatsApp() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="currentColor" aria-hidden="true">
+      <path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.6 4.7-1.2A10 10 0 1 0 12 2zm0 2a8 8 0 0 1 6.6 12.5l.7 2.5-2.6-.7A8 8 0 1 1 12 4zm-3 3.6c-.2 0-.5 0-.7.4-.2.4-.9.9-.9 2.2s.9 2.6 1 2.8c.1.2 1.8 2.9 4.5 3.9 2.2.9 2.7.7 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.7-.3s-1.4-.7-1.6-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.3.1-.4l.4-.5c.1-.2.2-.3.2-.5v-.4c0-.1-.6-1.5-.8-2-.2-.4-.4-.4-.6-.4z" />
     </svg>
   );
 }
@@ -88,6 +113,13 @@ export default function Contact() {
   const t = useCopy();
   const lang = useLang();
   const info = buildInfo(data, t);
+  // Country-correct social destinations (same helper the footer uses).
+  const sLinks = socialLinks(data);
+  const socials = [
+    { Icon: Instagram, label: "Instagram", href: sLinks.instagram },
+    { Icon: TikTok, label: "TikTok", href: sLinks.tiktok },
+    { Icon: WhatsApp, label: "WhatsApp", href: sLinks.whatsapp },
+  ];
   // Selected treatments arrive as canonical English names; show them in the
   // active language.
   const picked = (location.state?.services ?? []).map((s) => displayName(s, lang));
@@ -163,7 +195,6 @@ export default function Contact() {
           {/* Left — info */}
           <div data-reveal>
             <div className="flex items-end gap-4">
-              <img src={flourishLeft} alt="" aria-hidden="true" className="hidden h-14 w-auto select-none sm:block" />
               <h2 className="font-script text-[44px] leading-none text-gold [text-shadow:0_0_18px_rgba(199,162,83,0.3)] sm:text-[56px]">
                 {t("contact.visitScript")}
               </h2>
@@ -196,6 +227,27 @@ export default function Contact() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Social — country-correct Instagram / TikTok / WhatsApp */}
+            <div className="mt-9">
+              <p className="mb-3 font-sans text-[12px] tracking-[0.2em] text-gold-soft">
+                {t("contact.followUs").toUpperCase()}
+              </p>
+              <div className="flex items-center gap-3">
+                {socials.map(({ Icon, label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-green-card/50 text-gold transition-colors hover:border-gold hover:bg-gold hover:text-green-darkest"
+                  >
+                    <Icon />
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 

@@ -18,10 +18,18 @@ const STORAGE_KEY = "mbb-location";
 // switching salons swaps the platform on the very next click.
 export const openBooking = (url) => window.open(url, "_blank", "noopener,noreferrer");
 
+// Build the outbound social/WhatsApp URLs for a location from its handles.
+// Keeping this in one place means every icon/button stays country-correct.
+export const socialLinks = (data) => ({
+  instagram: `https://instagram.com/${data.instagram}`,
+  tiktok: `https://www.tiktok.com/@${data.tiktok}`,
+  whatsapp: `https://wa.me/${data.whatsapp}`,
+});
+
 // Map GPS coordinates to one of our two salons via a free, keyless reverse
-// geocode. Houston and Monterrey are too close for a lat/lng bounding box to
-// separate them, so we resolve the actual country. Returns "mx", "us", or null
-// (unknown / any other country → let the visitor choose).
+// geocode. A lat/lng bounding box can't reliably tell the two countries apart
+// near the border, so we resolve the actual country. Returns "mx", "us", or
+// null (unknown / any other country → let the visitor choose).
 async function countryFromCoords(lat, lng) {
   try {
     const res = await fetch(
@@ -42,14 +50,23 @@ export const LOCATIONS = {
     code: "mx",
     flag: "🇲🇽",
     label: "México",
-    city: "Ciudad de México", // TODO: client to confirm
-    address: "[MX ADDRESS PLACEHOLDER]", // TODO: client to confirm
-    phone: "+52 55 0000 0000", // TODO: client to confirm
-    phoneHref: "tel:+525500000000", // TODO: client to confirm
+    city: "11530 Ciudad de México, CDMX, México",
+    address: "1337 Homero Avenue, Polanco (2ª Sección), Miguel Hidalgo",
+    phone: "+52 55 2908 8580", // same as WhatsApp; change if the call line differs
+    phoneHref: "tel:+525529088580",
     email: "mexico@margaretsbeautybar.com", // TODO: client to confirm
     hours: { week: "Mon–Sat · 9AM – 8PM", sun: "Sunday · 10AM – 6PM" }, // TODO: client to confirm
-    instagram: "[MX HANDLE]", // TODO: client to confirm
-    hasBar: true,
+    // Social handles (no leading @). URLs are built by socialLinks() below.
+    instagram: "margaretsbeautybar", // @margaretsbeautybar
+    tiktok: "margarets.beautybar", // @margarets.beautybar
+    whatsapp: "525529088580", // +52 55 2908 8580 (digits only, for wa.me)
+    // Legal documents — client will supply the final PDFs. Drop them in
+    // /public/legal/ (or replace with a hosted URL). Links are already wired
+    // in the footer; they simply resolve once the files exist. TODO: client PDFs.
+    privacyUrl: "/legal/privacy-policy.pdf",
+    termsUrl: "/legal/terms-and-conditions.pdf",
+    hasBar: true, // shows the drinks/refreshments menu page + nav/footer links
+    servesAlcohol: true, // México serves alcohol → the beer bar item is shown
     // Booking platform for the México salon.
     bookingUrl: "https://www.welns.io/product/booking/WFRCHN000013093/Margaretsbeautybar?bk_src=WI104",
     bookingPlatform: "Welns",
@@ -68,26 +85,35 @@ export const LOCATIONS = {
     code: "us",
     flag: "🇺🇸",
     label: "USA",
-    city: "Houston", // TODO: client to confirm
-    address: "[USA ADDRESS PLACEHOLDER]", // TODO: client to confirm
-    phone: "(555) 000-0000", // TODO: client to confirm
-    phoneHref: "tel:+15550000000", // TODO: client to confirm
+    city: "Winter Garden, FL 34787, United States",
+    address: "12623 W Colonial Dr A",
+    phone: "(352) 459-8223", // same as WhatsApp; change if the call line differs
+    phoneHref: "tel:+13524598223",
     email: "usa@margaretsbeautybar.com", // TODO: client to confirm
     hours: { week: "Mon–Sat · 9AM – 8PM", sun: "Sunday · 10AM – 6PM" }, // TODO: client to confirm
-    instagram: "[USA HANDLE]", // TODO: client to confirm
-    hasBar: false,
+    // Social handles (no leading @). URLs are built by socialLinks() below.
+    instagram: "margaretsbeautybar.usa", // @margaretsbeautybar.usa
+    tiktok: "margaretsbeautybar.usa", // @margaretsbeautybar.usa
+    whatsapp: "13524598223", // +1 (352) 459-8223 (digits only, for wa.me)
+    // Legal documents — client will supply the final PDFs. Drop them in
+    // /public/legal/ (or replace with a hosted URL). Links are already wired
+    // in the footer; they simply resolve once the files exist. TODO: client PDFs.
+    privacyUrl: "/legal/privacy-policy.pdf",
+    termsUrl: "/legal/terms-and-conditions.pdf",
+    hasBar: true, // USA also has a menu — a no-alcohol "Refreshments" version
+    servesAlcohol: false, // USA: no alcohol → the beer bar item is hidden
     // Booking platform for the USA salon.
     bookingUrl: "https://margaretsbeautybar.glossgenius.com/",
     bookingPlatform: "GlossGenius",
     heroKicker: "BEAUTY. BLISS. LUXURY.",
     heroAccent: "Beauty & Bliss",
     heroTagline:
-      "Premium nail artistry, refreshments, and beauty treatments in the heart of Houston.",
+      "Premium nail artistry, refreshments, and beauty treatments in the heart of Winter Garden, Florida.",
     footerTagline:
       "An elevated beauty bar where premium treatments meet signature refreshments — crafted for those who indulge.",
     metaTitle: "Margaret's Beauty Bar — USA",
     metaDescription:
-      "Margaret's Beauty Bar in Houston — premium beauty treatments and an upscale social atmosphere in one elevated space.",
+      "Margaret's Beauty Bar in Winter Garden, FL — premium beauty treatments and an upscale social atmosphere in one elevated space.",
   },
 };
 

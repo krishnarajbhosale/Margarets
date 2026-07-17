@@ -13,8 +13,7 @@ const SCALLOP =
 const buildServices = (t) => [
   { img: kidsNail, icon: iconKids, name: t("signature.kidsName"), sub: t("signature.cardSub") },
   { img: facial, icon: iconFacial, name: t("signature.facialsName"), sub: t("signature.cardSub") },
-  { img: kidsNail, icon: iconKids, name: t("signature.kidsName"), sub: t("signature.cardSub") },
-  { img: manicure, icon: null, name: "", sub: "" },
+  { img: manicure, icon: daisyMark, name: t("signature.manicureName"), sub: t("signature.cardSub") },
 ];
 
 function GoldIcon({ src, className }) {
@@ -74,15 +73,17 @@ export default function SignatureServices() {
         {t("signature.subtitle")}
       </p>
 
-      {/* Cards — fixed-width cards that wrap: 1-up on phones, 2-up on tablets,
-          4-up on desktop. */}
-      <div className="relative z-10 flex flex-wrap justify-center gap-5">
+      {/* Cards — a snap-scrolling carousel on mobile & tablet; a centered row
+          on desktop. data-reveal sits on the track so every card (including the
+          ones that start off-screen to the right) is visible right away. */}
+      <div
+        data-reveal
+        className="relative z-10 -mx-5 flex snap-x snap-mandatory gap-8 overflow-x-auto px-5 pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-10 sm:px-10 lg:mx-0 lg:flex-wrap lg:justify-center lg:overflow-visible lg:px-0 lg:pb-0"
+      >
         {SERVICES.map((s, i) => (
           <div
             key={i}
-            data-reveal
-            data-reveal-delay={i * 90}
-            className="hover-glow group relative h-[440px] w-[320px] overflow-hidden rounded-[18px] bg-[#0c1f16]"
+            className="hover-glow group relative h-[440px] w-[320px] shrink-0 snap-center overflow-hidden rounded-[18px] bg-[#0c1f16]"
           >
             <div className="h-[212px] w-full overflow-hidden" style={{ clipPath: SCALLOP }}>
               <img

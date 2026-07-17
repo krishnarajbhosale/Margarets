@@ -7,41 +7,24 @@ import coffee from "../../assets/images/bm-coffee.webp";
 import tea from "../../assets/images/bm-tea.webp";
 import soft from "../../assets/images/bm-soft.webp";
 import water from "../../assets/images/bm-water.webp";
-import { useCopy } from "../../lib/location.jsx";
+import { useCopy, useLocationData } from "../../lib/location.jsx";
 
-// The Bar Menu is exclusive to the México salon, so its copy is in Spanish.
-const ITEMS = [
-  {
-    img: beer,
-    title: "BAR DE CERVEZA",
-    tagline: "Fría, Clásica.",
-    desc: "Una Amplia Variedad De Cervezas Para Todo Amante De La Buena Cerveza.",
-  },
-  {
-    img: coffee,
-    title: "BAR DE CAFÉ",
-    tagline: "Preparado A La Perfección.",
-    desc: "Del Espresso Al Capuchino, Disfruta Cada Sorbo.",
-  },
-  {
-    img: tea,
-    title: "BAR DE TÉ",
-    tagline: "Cálido. Relajante. Reconfortante.",
-    desc: "Una Selección De Tés Premium De Todo El Mundo.",
-  },
-  {
-    img: soft,
-    title: "REFRESCOS",
-    tagline: "Frescos Y Refrescantes.",
-    desc: "Una Variedad De Refrescos Para Mantenerte Hidratado.",
-  },
-  {
-    img: water,
-    title: "AGUA Y MUCHO MÁS...",
-    tagline: "Mantente Hidratado.",
-    desc: "Agua Natural, Agua Mineral Y Más Opciones.",
-  },
-];
+// Both salons share this menu. Text comes from copy.js per language (es/en).
+// The beer item only appears where alcohol is served (México); the USA version
+// is a no-alcohol "Refreshments" menu. Images are shared; copy differs.
+const ITEM_IMAGES = { beer, coffee, tea, soft, water };
+
+const buildItems = (t, servesAlcohol) => {
+  const keys = servesAlcohol
+    ? ["beer", "coffee", "tea", "soft", "water"]
+    : ["coffee", "tea", "soft", "water"];
+  return keys.map((k) => ({
+    img: ITEM_IMAGES[k],
+    title: t(`barMenu.items.${k}.title`),
+    tagline: t(`barMenu.items.${k}.tagline`),
+    desc: t(`barMenu.items.${k}.desc`),
+  }));
+};
 
 // Fine film-grain texture layered over each card (matches the design's noise).
 const GRAIN =
@@ -77,19 +60,28 @@ function DaisyDivider({ className = "" }) {
 
 export default function BarMenu() {
   const t = useCopy();
+  const { data } = useLocationData();
+  const ITEMS = buildItems(t, data.servesAlcohol);
   return (
     <section id="bar-menu" className="relative overflow-hidden bg-green-deep pt-[92px]">
       <div className="mx-auto w-full max-w-[1320px] px-6 sm:px-10">
         {/* Top daisy divider */}
         <DaisyDivider className="pt-6" />
 
-        {/* Title + subtitle */}
+        {/* Title + subtitle. México uses the stylized "Bar Menu" artwork; the
+            no-alcohol USA version renders a matching gold script title. */}
         <div className="mt-10 text-center" data-reveal>
-          <img
-            src={bmTitle}
-            alt="Bar Menu"
-            className="mx-auto h-[70px] w-auto select-none mix-blend-lighten sm:h-[92px]"
-          />
+          {data.servesAlcohol ? (
+            <img
+              src={bmTitle}
+              alt="Bar Menu"
+              className="mx-auto h-[70px] w-auto select-none mix-blend-lighten sm:h-[92px]"
+            />
+          ) : (
+            <h1 className="font-script text-[56px] leading-none text-gold [text-shadow:0_0_18px_rgba(199,162,83,0.35)] sm:text-[80px]">
+              {t("barMenu.title")}
+            </h1>
+          )}
           <p className="mt-5 font-serif text-[18px] tracking-[0.02em] text-cream/90 sm:text-[22px]">
             {t("barMenu.subtitle")}
           </p>
