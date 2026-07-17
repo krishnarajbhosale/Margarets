@@ -72,7 +72,7 @@ export const LOCATIONS = {
     bookingPlatform: "Welns",
     // Branch prose in Spanish (México → es).
     heroKicker: "BELLEZA. CÓCTELES. LUJO.",
-    heroAccent: "Belleza & Cócteles",
+    heroAccent: "Experiencia",
     heroTagline:
       "Arte en uñas premium, cócteles y tratamientos de belleza en el corazón de la Ciudad de México.",
     footerTagline:
@@ -106,7 +106,7 @@ export const LOCATIONS = {
     bookingUrl: "https://margaretsbeautybar.glossgenius.com/",
     bookingPlatform: "GlossGenius",
     heroKicker: "BEAUTY. BLISS. LUXURY.",
-    heroAccent: "Beauty & Bliss",
+    heroAccent: "Experience",
     heroTagline:
       "Premium nail artistry, refreshments, and beauty treatments in the heart of Winter Garden, Florida.",
     footerTagline:

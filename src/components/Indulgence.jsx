@@ -70,7 +70,7 @@ export default function Indulgence() {
         height="1145"
         loading="lazy"
         decoding="async"
-        className="float-slow pointer-events-none absolute right-[24px] top-[60px] z-10 hidden h-[500px] w-auto select-none opacity-50 lg:block"
+        className="float-slow pointer-events-none absolute right-[24px] top-[223px] z-10 hidden h-[500px] w-auto select-none opacity-50 lg:block"
       />
 
       {/* Right content: in-flow below the photo on mobile, absolute right panel on desktop */}

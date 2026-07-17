@@ -180,8 +180,8 @@ export const COPY = {
       switchToOther: "Cambiar a México", // shown to US users (destination language)
     },
     hero: {
-      title1: "Un Beauty Bar",
-      title2: "De Alto Nivel",
+      title1: "Un Exclusivo",
+      title2: "Bar De Belleza",
       ctaPrimary: "Reservar Ahora",
       ctaSecondary: "Explorar Servicios",
     },
