@@ -54,7 +54,7 @@ export const LOCATIONS = {
     address: "1337 Homero Avenue, Polanco (2ª Sección), Miguel Hidalgo",
     phone: "+52 55 2908 8580", // same as WhatsApp; change if the call line differs
     phoneHref: "tel:+525529088580",
-    email: "mexico@margaretsbeautybar.com", // TODO: client to confirm
+    email: "info@margaretsbeautybar.com", // TODO: client to confirm
     hours: { week: "Mon–Sat · 9AM – 8PM", sun: "Sunday · 10AM – 6PM" }, // TODO: client to confirm
     // Social handles (no leading @). URLs are built by socialLinks() below.
     instagram: "margaretsbeautybar", // @margaretsbeautybar
@@ -87,9 +87,9 @@ export const LOCATIONS = {
     label: "USA",
     city: "Winter Garden, FL 34787, United States",
     address: "12623 W Colonial Dr A",
-    phone: "(352) 459-8223", // same as WhatsApp; change if the call line differs
+    phone: "+13524598223", // same as WhatsApp; change if the call line differs
     phoneHref: "tel:+13524598223",
-    email: "usa@margaretsbeautybar.com", // TODO: client to confirm
+    email: "margaretsbeautybar.usa@gmail.com", // TODO: client to confirm
     hours: { week: "Mon–Sat · 9AM – 8PM", sun: "Sunday · 10AM – 6PM" }, // TODO: client to confirm
     // Social handles (no leading @). URLs are built by socialLinks() below.
     instagram: "margaretsbeautybar.usa", // @margaretsbeautybar.usa
