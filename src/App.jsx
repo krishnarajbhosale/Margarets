@@ -3,7 +3,9 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import ScrollTopButton from "./components/ScrollTopButton.jsx";
+import CartDrawer from "./components/shop/CartDrawer.jsx";
 import { LocationProvider, LocationSplash, useLocationData } from "./lib/location.jsx";
+import { CartProvider } from "./lib/cart.jsx";
 import { initReveals } from "./lib/scroll.js";
 import daisyMark from "./assets/images/daisy-mark.webp";
 
@@ -13,6 +15,7 @@ const Services = lazy(() => import("./pages/Services.jsx"));
 const Menu = lazy(() => import("./pages/Menu.jsx"));
 const Contact = lazy(() => import("./pages/Contact.jsx"));
 const Book = lazy(() => import("./pages/Book.jsx"));
+const Shop = lazy(() => import("./pages/Shop.jsx"));
 const NotFound = lazy(() => import("./pages/NotFound.jsx"));
 
 // Minimal branded fallback while a page chunk loads.
@@ -54,6 +57,11 @@ function Shell() {
             />
             <Route path="/contact" element={<Contact />} />
             <Route path="/book" element={<Book />} />
+            {/* Marketplace — a USA-only experience (gated like /menu). */}
+            <Route
+              path="/shop"
+              element={data.hasShop ? <Shop /> : <Navigate to="/" replace />}
+            />
             {/* Branded 404 for anything unmatched, in both locales. */}
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -61,6 +69,7 @@ function Shell() {
       </div>
       <Footer />
       <ScrollTopButton />
+      {data.hasShop && <CartDrawer />}
       <LocationSplash />
     </>
   );
@@ -69,7 +78,9 @@ function Shell() {
 export default function App() {
   return (
     <LocationProvider>
-      <Shell />
+      <CartProvider>
+        <Shell />
+      </CartProvider>
     </LocationProvider>
   );
 }

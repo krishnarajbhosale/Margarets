@@ -10,6 +10,7 @@ export const COPY = {
       home: "HOME",
       services: "SERVICES",
       beautyBar: "REFRESHMENTS", // USA menu (no alcohol); MX keeps "BEAUTY BAR"
+      shop: "SHOP",
       book: "BOOK APPOINTMENT",
       contact: "CONTACT",
       bookCta: "Book Appointment",
@@ -182,6 +183,7 @@ export const COPY = {
       home: "INICIO",
       services: "SERVICIOS",
       beautyBar: "BEAUTY BAR",
+      shop: "TIENDA",
       book: "RESERVAR CITA",
       contact: "CONTACTO",
       bookCta: "Reservar Cita",

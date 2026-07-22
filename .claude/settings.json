@@ -15,7 +15,11 @@
       "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/shot_mx_services.mjs\")",
       "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/audit_mobile.mjs\")",
       "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/qa_final.mjs\")",
-      "Bash(sed -i 's/4217/4218/; s/setTimeout\\(r, 4500\\)/setTimeout\\(r, 7000\\)/' \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/qa_final.mjs\")"
+      "Bash(sed -i 's/4217/4218/; s/setTimeout\\(r, 4500\\)/setTimeout\\(r, 7000\\)/' \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/qa_final.mjs\")",
+      "Bash(node \"C:/Users/bhosa/AppData/Local/Temp/claude/c--Users-bhosa-OneDrive-Desktop-Margarates/afdb7ce7-e5ef-4f40-a35c-c075bc904f56/scratchpad/qa_shop.mjs\")",
+      "Bash(awk '{print $NF, $5}')",
+      "Bash(sed 's/4225/4226/; s/nav3_overlay1024/nav4_overlay1024/' /tmp/navcheck3.mjs)",
+      "Bash(node /tmp/navcheck4.mjs)"
     ]
   }
 }

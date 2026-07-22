@@ -4,20 +4,31 @@ import daisyMark from "../assets/images/daisy-mark.webp";
 import { scrollToId } from "../lib/scroll.js";
 import { COPY } from "../lib/copy.js";
 import { Flag, LOCATIONS, openBooking, useCopy, useLocationData } from "../lib/location.jsx";
+import { useCart } from "../lib/cart.jsx";
 
 // Shared site-wide link set. Each link is either a route ("/services"), an
 // in-page section anchor ("services"), or the external booking platform
 // (external: true). Section anchors that belong to the home page route the user
-// there first, then smooth-scroll. The bar-menu link only exists for the
-// location that serves drinks. The "book" link opens the active salon's
+// there first, then smooth-scroll. The bar-menu and shop links only exist for
+// the locations that offer them. The "book" link opens the active salon's
 // external booking site (Welns / GlossGenius) — same destination as the CTA.
-const buildLinks = (t, hasBar) => [
+const buildLinks = (t, data) => [
   { key: "home", label: t("nav.home"), section: "home", home: true },
   { key: "services", label: t("nav.services"), to: "/services" },
-  ...(hasBar ? [{ key: "beautyBar", label: t("nav.beautyBar"), to: "/menu" }] : []),
+  ...(data.hasBar ? [{ key: "beautyBar", label: t("nav.beautyBar"), to: "/menu" }] : []),
+  ...(data.hasShop ? [{ key: "shop", label: t("nav.shop"), to: "/shop" }] : []),
   { key: "book", label: t("nav.book"), external: true },
   { key: "contact", label: t("nav.contact"), to: "/contact" },
 ];
+
+function CartIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[19px] w-[19px]" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+      <path d="M6 8h12l-1 12.5H7L6 8Z" />
+      <path d="M9 8V6.2a3 3 0 0 1 6 0V8" />
+    </svg>
+  );
+}
 
 export default function Navbar({ variant = "outline" }) {
   const [scrolled, setScrolled] = useState(false);
@@ -26,10 +37,11 @@ export default function Navbar({ variant = "outline" }) {
   const location = useLocation();
   const { code, data, setLocation } = useLocationData();
   const t = useCopy();
+  const { count, setOpen } = useCart();
   const overlayRef = useRef(null);
   const toggleRef = useRef(null);
   const other = LOCATIONS[code === "mx" ? "us" : "mx"];
-  const navLinks = buildLinks(t, data.hasBar);
+  const navLinks = buildLinks(t, data);
   // The switch label reads in the DESTINATION's language ("Switch to USA" for
   // MX visitors), so pull it from the other salon's copy, not the current one.
   const switchLabel = COPY[other.code === "mx" ? "es" : "en"].nav.switchToOther;
@@ -162,8 +174,9 @@ export default function Navbar({ variant = "outline" }) {
             </span>
           </button>
 
-          {/* Links */}
-          <nav className="hidden items-center gap-7 lg:flex xl:gap-9">
+          {/* Links — with SHOP the set is 6 wide, so the horizontal nav appears
+              at xl and the hamburger covers 1024–1279 (tablet-landscape). */}
+          <nav className="hidden items-center gap-6 xl:flex xl:gap-8">
             {navLinks.map((link) => (
               <button
                 key={link.key}
@@ -179,6 +192,23 @@ export default function Navbar({ variant = "outline" }) {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* Cart — USA marketplace only. Opens the slide-over drawer; the
+                badge reflects the live item count. Shown at every width. */}
+            {data.hasShop && (
+              <button
+                onClick={() => setOpen(true)}
+                aria-label={`Open cart, ${count} item${count === 1 ? "" : "s"}`}
+                className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gold/40 text-gold-soft transition-all duration-300 hover:border-gold hover:text-gold hover:shadow-[0_0_14px_rgba(199,162,83,0.35)]"
+              >
+                <CartIcon />
+                {count > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-gold px-1 font-sans text-[10px] font-semibold leading-none text-green-darkest">
+                    {count}
+                  </span>
+                )}
+              </button>
+            )}
+
             {/* Location switcher: shows the OTHER salon's flag, tooltip in the
                 destination's language. */}
             <button
@@ -190,8 +220,9 @@ export default function Navbar({ variant = "outline" }) {
               <Flag code={other.code} className="h-4 w-6 rounded-sm" />
             </button>
 
-            {/* CTA → instant external booking. Hidden on phones — the bar is too
-                tight and the mobile overlay menu carries its own booking CTA. */}
+            {/* CTA → instant external booking. Hidden on phones — the mobile
+                overlay menu carries its own booking CTA. Shown from sm up, next
+                to the hamburger (≤xl) or the full nav (xl+). */}
             <button
               onClick={instantBook}
               className={
@@ -209,7 +240,7 @@ export default function Navbar({ variant = "outline" }) {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
-              className="flex h-12 w-12 flex-col items-center justify-center gap-[5px] lg:hidden"
+              className="flex h-12 w-12 flex-col items-center justify-center gap-[5px] xl:hidden"
             >
               <span className={`h-px w-6 bg-gold transition-transform duration-300 ${menuOpen ? "translate-y-[6px] rotate-45" : ""}`} />
               <span className={`h-px w-6 bg-gold transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""}`} />
@@ -229,7 +260,7 @@ export default function Navbar({ variant = "outline" }) {
         role="dialog"
         aria-modal="true"
         aria-hidden={!menuOpen}
-        className={`fixed inset-0 z-40 lg:hidden ${menuOpen ? "" : "pointer-events-none"}`}
+        className={`fixed inset-0 z-40 xl:hidden ${menuOpen ? "" : "pointer-events-none"}`}
       >
         {/* Fully opaque deep-green backdrop */}
         <div

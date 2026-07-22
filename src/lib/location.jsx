@@ -67,6 +67,7 @@ export const LOCATIONS = {
     termsUrl: "/legal/terms-and-conditions.pdf",
     hasBar: true, // shows the drinks/refreshments menu page + nav/footer links
     servesAlcohol: true, // México serves alcohol → the beer bar item is shown
+    hasShop: false, // marketplace is a USA-only experience for now
     // Booking platform for the México salon.
     bookingUrl: "https://www.welns.io/product/booking/WFRCHN000013093/Margaretsbeautybar?bk_src=WI104",
     bookingPlatform: "Welns",
@@ -102,6 +103,7 @@ export const LOCATIONS = {
     termsUrl: "/legal/terms-and-conditions.pdf",
     hasBar: true, // USA also has a menu — a no-alcohol "Refreshments" version
     servesAlcohol: false, // USA: no alcohol → the beer bar item is hidden
+    hasShop: true, // marketplace / shop page is enabled for the USA salon
     // Booking platform for the USA salon.
     bookingUrl: "https://margaretsbeautybar.glossgenius.com/",
     bookingPlatform: "GlossGenius",
